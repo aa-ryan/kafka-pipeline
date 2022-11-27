@@ -1,0 +1,1 @@
+confluent kafka topic consume patient_vital --cluster lkc-vr7185  --api-key GTIZPZASGF2HRFYY --api-secret ADvYSqOweG50SWH2sJNCkJwjO9Qqy1PSacqAxzcmzO9HUE0kJNG9Ycedzd27WlAX --from-beginning
