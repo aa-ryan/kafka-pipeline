@@ -18,58 +18,73 @@ def check_severity(patient_dict):
     response_dict = {}
     response_dict['PatientId'] = patient_dict['PatientId']
     response_dict['ward'] = patient_dict['ward']
-    
+
+    risk_of = "Risk of: "
+    description = ""
+
     def check_temperature(temperature):
-        if 0 <= temperature < 35 or temperature >= 39.1:
-            return "High Risk"
-        if 35 <= temperature <= 35.9 or 38.1 <= temperature <= 39:
-            return "Moderate Risk"
-        if 36 <= temperature <= 36.9 or 37.6 <= temperature <= 38:
-            return "Low Risk"
-        if 37 <= temperature <= 37.5:
-            return "Healthy"
-            
+        if 0 <= temperature < 35:
+            description += risk_of + "Severe Hypothermia"
+        if temperature >= 39.1:
+            description += risk_of + "Severe Hyperthermia"
+        if 35 <= temperature <= 35.9:
+            description += risk_of + "Moderate Hypothermia"
+        if 38.1 <= temperature <= 39:
+            description += risk_of + "Moderate Hyperthermia"
+        if 36 <= temperature <= 36.9:
+            description += risk_of + "Mild Hypothermia"
+        if 37.6 <= temperature <= 38:
+            description += risk_of + "Mild Hyperthermia"
+
     def check_heart_rate(heart_rate):
-        if 0 <= heart_rate < 40 or heart_rate > 130:
-            return "High Risk"
-        if 40 <= heart_rate < 41 or 111 <= heart_rate <= 130:
-            return "Moderate Risk"
-        if 41 <= heart_rate <= 50 or 91 <= heart_rate <= 100:
-            return "Low Risk"
-        if 51 <= heart_rate <= 90: 
-            return "Healthy"
-        
+        if 0 <= heart_rate < 40:
+            description += "Possible " + risk_of + "Bradyarrhythmias"
+        if heart_rate > 130:
+            description += "Possible " + risk_of + "Tachyarrhythmias or Atrial Fibrillation"
+        if 40 <= heart_rate < 41:
+            description += "Possible" + risk_of + "Bradyarrhythmias or Sinus Bradycardia"
+        if 111 <= heart_rate <= 130:
+            description += "Possible" + risk_of + "Sinus Tachyarrhythmia or Tachyarrhythmias"
+        if 41 <= heart_rate <= 50:
+            description += "Possible" + risk_of + "Sinus Bradyarrhythmia"
+        if 91 <= heart_rate <= 100:
+            description += "Possible" + risk_of + "Sinus Tachyarrhythmia"
+
     def check_respiration_rate(respiration_rate):
-        if 0 <= respiration_rate < 8 or respiration_rate >= 25:
-            return "High Risk"
-        if 8 <= respiration_rate <= 9 or 21 <= respiration_rate <= 24:
-            return "Moderate Risk"
-        if 10 <= respiration_rate <= 11 or 19 <= respiration_rate <= 20:
-            return "Low Risk"
-        if 12 <= respiration_rate <= 18:
-            return "Healthy"
-        
-        
+        if 0 <= respiration_rate < 8:
+            description += risk_of + "Severe Bradyapnea"
+        if respiration_rate >= 25:
+            description += risk_of + "Severe Tachypnea"
+        if 8 <= respiration_rate <= 9:
+            description += risk_of + "Moderate Bradyapnea"
+        if 21 <= respiration_rate <= 24:
+            description += risk_of + "Moderate Tachypnea"
+        if 10 <= respiration_rate <= 11:
+            description += risk_of + "Mild Bradyapnea"
+        if 19 <= respiration_rate <= 20:
+            description += risk_of + "Mild Tachypnea"
+
     def check_blood_oxygen(blood_oxygen):
         if 0 <= blood_oxygen <= 85:
-            return "High Risk"
+            description += risk_of + "Severe Hypoxia"
         if 86 <= blood_oxygen <= 88:
-            return "Moderate Risk"
+            description += risk_of + "Moderate Hypoxia"
         if 89 <= blood_oxygen < 92:
-            return "Low Risk"
-        if blood_oxygen >= 92:
-            return "Healthy"
-        
-        
+            description += risk_of + "Mild Hypoxia"
+
     def check_blood_pressure(blood_pressure):
-        if 0 <= blood_pressure <= 90 or blood_pressure > 220:
-            return "High Risk"
-        if 91 <= blood_pressure <= 100 or 201 <= blood_pressure <= 220:
-            return "Moderate Risk"
-        if 101 <= blood_pressure <= 110 or 181 <= blood_pressure <= 200:
-            return "Low Risk"
-        if 111 <= blood_pressure <= 180:
-            return "Healthy"
+        if 0 <= blood_pressure <= 90:
+            description += risk_of + "Severe Hypotension"
+        if blood_pressure > 220:
+            description += risk_of + "Severe Hypertension"
+        if 91 <= blood_pressure <= 100:
+            description += risk_of + "Moderate Hypotension"
+        if 201 <= blood_pressure <= 220:
+            description += risk_of + "Moderate Hypertension"
+        if 101 <= blood_pressure <= 110:
+            description += risk_of + "Mild Hypotension"
+        if 181 <= blood_pressure <= 200:
+            description += risk_of + "Mild Hypertension"
 
     def check_risk(blood_oxygen, heart_rate, blood_pressure, respiration_rate, temperature):
         if (check_blood_oxygen(blood_oxygen) or check_blood_pressure(blood_pressure) or check_heart_rate(heart_rate) or check_respiration_rate(respiration_rate) or check_temperature(temperature)) == "High Risk":
