@@ -97,6 +97,7 @@ def check_severity(patient_dict):
             return "No Risk"
 
     response_dict['Risk Factor'] = check_risk(blood_oxygen, heart_rate, blood_pressure, respiration_rate, temperature)
+    response_dict['Description'] = description
 
     return str(response_dict)
 
