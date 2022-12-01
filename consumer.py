@@ -7,6 +7,8 @@
 from confluent_kafka import Consumer, Producer
 import random
 import json
+from dynamodb_json import json_util as json
+
 
 def check_severity(patient_dict):
     description = "Risk Of "
@@ -109,12 +111,15 @@ def check_severity(patient_dict):
     else:
         response_dict['risk_factor'] = check_risk(blood_oxygen, heart_rate, blood_pressure, respiration_rate, temperature)
         response_dict['description'] = description
-        return str(response_dict)
+        return response_dict
 
 def result_producer(patient_dict):
     conf = Producer(read_ccloud_config("client.properties"))
     if check_severity(patient_dict) != None:
-        conf.produce("model_output", check_severity(patient_dict))
+        cs = check_severity(patient_dict)
+        data = json.dumps(cs)
+        # print(data.encode('utf-8'))
+        conf.produce("producer1_aryan", data)
         conf.flush()
         
 def read_ccloud_config(config_file):
@@ -138,13 +143,13 @@ if __name__ == "__main__":
 
     consumer = Consumer(props)
 
-    consumer.subscribe(["patient_vitals"])
+    consumer.subscribe(["consumer_aryan"])
     try:
         while True:
             msg = consumer.poll(1.0)
             if msg is not None and msg.error() is None:
                 # print(msg.value().decode('utf-8'))
-                print("Consumed: " + str(str_to_dic(msg.value().decode('utf-8'))))
+                # print("Consumed: " + str(str_to_dic(msg.value().decode('utf-8'))))
                 result_producer(str_to_dic(msg.value().decode('utf-8')))
             else:
                 print("NONE")

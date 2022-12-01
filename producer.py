@@ -75,7 +75,7 @@ def generate_patient_data(patient_id, ward):
             json_dict['data']['OxygenSaturation'] = str(random.randint(lower_limit_oxy, upper_limit_oxy))
             json_dict['data']['BloodPressure'] = str(random.randint(lower_limit_bp, upper_limit_bp))
 
-            producer.produce("patient_vitals", str(json_dict))
+            producer.produce("consumer_aryan", str(json_dict))
             time.sleep(30)
 
             # with (open('json_data.json', 'a')) as f:
