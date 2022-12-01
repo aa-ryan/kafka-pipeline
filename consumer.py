@@ -7,7 +7,7 @@
 from confluent_kafka import Consumer, Producer
 import random
 import json
-from dynamodb_json import json_util as json
+# from dynamodb_json import json_util as json
 
 
 def check_severity(patient_dict):
@@ -118,8 +118,7 @@ def result_producer(patient_dict):
     if check_severity(patient_dict) != None:
         cs = check_severity(patient_dict)
         data = json.dumps(cs)
-        # print(data.encode('utf-8'))
-        conf.produce("producer1_aryan", data)
+        conf.produce("model_output", data.encode('utf-8'))
         conf.flush()
         
 def read_ccloud_config(config_file):
@@ -143,7 +142,7 @@ if __name__ == "__main__":
 
     consumer = Consumer(props)
 
-    consumer.subscribe(["consumer_aryan"])
+    consumer.subscribe(["patient_vitals"])
     try:
         while True:
             msg = consumer.poll(1.0)
