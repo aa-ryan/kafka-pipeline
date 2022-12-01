@@ -17,8 +17,8 @@ def check_severity(patient_dict):
     temperature = float(patient_dict['data']['Temperature'])
 
     response_dict = {}
-    response_dict['PatientId'] = patient_dict['PatientId']
-    response_dict['ward'] = patient_dict['ward']
+    response_dict['patient_id'] = patient_dict['PatientId']
+    response_dict['ward_assigned'] = patient_dict['ward']
 
 
     def check_temperature(temperature):
@@ -107,8 +107,8 @@ def check_severity(patient_dict):
     if check_risk(blood_oxygen, heart_rate, blood_pressure, respiration_rate, temperature) == None:
         return None
     else:
-        response_dict['Risk Factor'] = check_risk(blood_oxygen, heart_rate, blood_pressure, respiration_rate, temperature)
-        response_dict['Description'] = description
+        response_dict['risk_factor'] = check_risk(blood_oxygen, heart_rate, blood_pressure, respiration_rate, temperature)
+        response_dict['description'] = description
         return str(response_dict)
 
 def result_producer(patient_dict):
