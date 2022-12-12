@@ -9,6 +9,19 @@ import random
 import json
 # from dynamodb_json import json_util as json
 
+from telegram.ext.updater import Updater
+from telegram.update import Update
+from telegram.ext.callbackcontext import CallbackContext
+from telegram.ext.commandhandler import CommandHandler
+
+### Telegram Bot
+
+updater = Updater("5620842779:AAEOXFQMfm3NVqwrADErKdWbLOsNSjpdQ90", use_context=True)
+
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text(
+        "Hello sir, Welcome to the Bot. You'll get updates shortly")
+
 
 def check_severity(patient_dict):
     description = "Risk Of "
@@ -110,15 +123,17 @@ def check_severity(patient_dict):
         return None
     else:
         response_dict['risk_factor'] = check_risk(blood_oxygen, heart_rate, blood_pressure, respiration_rate, temperature)
-        response_dict['description'] = description
+        response_dict['risk_description'] = description
         return response_dict
 
 def result_producer(patient_dict):
     conf = Producer(read_ccloud_config("client.properties"))
     if check_severity(patient_dict) != None:
         cs = check_severity(patient_dict)
+        msg = 'PATIENT ' + str(cs["patient_id"]) + ' AT '+ str(cs["risk_factor"]) + '\n' + 'PATIENT ' + str(cs["patient_id"]) + ' ADMITTED AT ' + str(cs['ward_assigned']) + ' HAS ' + str(cs["risk_description"])
         data = json.dumps(cs)
-        conf.produce("model_output", data.encode('utf-8'))
+        conf.produce("patient_severity", data.encode('utf-8'))
+        updater.bot.sendMessage(chat_id=729902973, text=msg)
         conf.flush()
         
 def read_ccloud_config(config_file):
@@ -135,6 +150,8 @@ def str_to_dic(s):
     return eval(s)
 
 if __name__ == "__main__":
+    updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.start_polling()
     props = read_ccloud_config("client.properties")
     props["group.id"] = "python-group-1"
     # print("Group ID - {}".format(pros['group.id']) )
